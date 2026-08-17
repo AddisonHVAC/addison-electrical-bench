@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ADDISON - Sub Assembly / Electrical Bench</title>
   <!-- Librería JsBarcode (Código de Barras) -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
@@ -376,6 +376,70 @@
     }
 
     .print-signatures { display: none; }
+
+    /* ==========================================
+       ADAPTACIÓN PARA PANTALLAS MÓVILES (RESPONSIVE)
+       ========================================== */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 8px;
+      }
+
+      .app-container {
+        padding: 12px;
+        border-radius: 8px;
+      }
+
+      .grid-2, 
+      .analytics-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+      }
+
+      .brand-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .brand-title {
+        font-size: 22px !important;
+      }
+
+      .sub-title {
+        font-size: 11px !important;
+      }
+
+      .tab-nav {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px;
+      }
+
+      .tab-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+
+      .checkpoint-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .radio-group {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+
+      #historyTab {
+        overflow-x: auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -513,7 +577,7 @@
 </div>
 
 <script>
-  // Personalclasificado
+  // Personal
   const leadRoster = [
     { id: "824",  name: "Montes, Edwin" },
     { id: "0134", name: "Pajic, Ljubica" }
