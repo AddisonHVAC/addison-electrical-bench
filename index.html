@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADDISON - Sub Assembly / Electrical Bench</title>
+  <!-- Librería JsBarcode (Código de Barras) -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <style>
+    :root {
+      --bg-light: #f1f5f9;
+      --panel-bg: #ffffff;
+      --card-bg: #f8fafc;
+      --addison-green: #059669;
+      --accent-blue: #0284c7;
+      --accent-orange: #ea580c;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .app-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--panel-bg);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Header Industrial Claro */
+    .brand-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--addison-green);
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+
+    .brand-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--addison-green);
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .sub-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-top: 4px;
+    }
+
+    .timer-badge {
+      background: #ecfdf5;
+      border: 1px solid var(--addison-green);
+      color: var(--addison-green);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    /* Navegación por Pestañas */
+    .tab-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      color: var(--addison-green);
+      border-bottom-color: var(--addison-green);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Formularios e Inputs */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--addison-green);
+      box-shadow: 0 0 6px rgba(5, 150, 105, 0.25);
+    }
+
+    /* Contenedor Código de Barras */
+    .barcode-container {
+      margin-top: 10px;
+      background: #ffffff;
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 60px;
+    }
+
+    /* Lista de Verificación */
+    .checklist-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .checklist-header {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent-blue);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .checkpoint-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: #ffffff;
+      margin-bottom: 6px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      font-size: 13px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 15px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin: 0;
+      cursor: pointer;
+      color: var(--text-main);
+      font-size: 12px;
+    }
+
+    /* Botones */
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary { background: var(--addison-green); color: #ffffff; }
+    .btn-primary:hover { background: #047857; }
+
+    .btn-secondary { background: var(--accent-blue); color: #ffffff; }
+    .btn-secondary:hover { background: #0369a1; }
+
+    /* Tablas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13px;
+    }
+
+    th {
+      background: var(--card-bg);
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .badge-wiring { background: #e0f2fe; color: var(--accent-blue); border: 1px solid #93c5fd; }
+    .badge-mounting { background: #ffedd5; color: var(--accent-orange); border: 1px solid #fdba74; }
+
+    /* Métricas y Gráfica */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--addison-green);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .bar-chart {
+      margin-top: 15px;
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .bar-item {
+      margin-bottom: 12px;
+    }
+
+    .bar-track {
+      background: #e2e8f0;
+      height: 14px;
+      border-radius: 7px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--addison-green);
+      border-radius: 7px;
+      transition: width 0.4s ease;
+    }
+
+    /* Reglas para Impresión en Hoja Única */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        padding: 0;
+      }
+      .app-container {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: 100% !important;
+      }
+      .no-print, .tab-nav, .btn-group, #analyticsTab, #historyTab, .timer-badge {
+        display: none !important;
+      }
+      .tab-content { display: block !important; }
+      .brand-title { color: #059669 !important; font-size: 22px !important; }
+      .sub-title { color: #333 !important; font-size: 11px !important; }
+      input, select {
+        border: none !important;
+        border-bottom: 1px solid #000 !important;
+        background: transparent !important;
+        color: black !important;
+        padding: 2px !important;
+      }
+      .barcode-container {
+        border: none !important;
+        padding: 0 !important;
+      }
+      .checklist-container {
+        background: white !important;
+        border: 1px solid #000 !important;
+        padding: 6px !important;
+        margin-top: 8px !important;
+      }
+      .checkpoint-row {
+        background: white !important;
+        border-bottom: 1px solid #ddd !important;
+        padding: 2px 0 !important;
+        color: black !important;
+      }
+      .radio-group label { color: black !important; }
+      .print-signatures {
+        display: flex !important;
+        justify-content: space-between;
+        margin-top: 25px;
+        padding-top: 15px;
+      }
+      .signature-box {
+        width: 45%;
+        border-top: 1px solid #000;
+        text-align: center;
+        font-size: 11px;
+        font-weight: bold;
+      }
+    }
+
+    .print-signatures { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Brand Header -->
+  <div class="brand-header">
+    <div>
+      <h1 class="brand-title">ADDISON</h1>
+      <div class="sub-title">SUB ASSEMBLY DEPARTMENT — ELECTRICAL BENCH</div>
+    </div>
+    <div style="text-align: right;" class="no-print">
+      <div class="timer-badge">Cycle Time: <span id="timerDisplay">00:00</span></div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="tab-nav no-print">
+    <button class="tab-btn active" onclick="switchTab('inspectionTab', this)">Work Log & Checklist</button>
+    <button class="tab-btn" onclick="switchTab('analyticsTab', this)">Performance Analytics</button>
+    <button class="tab-btn" onclick="switchTab('historyTab', this)">History Log</button>
+  </div>
+
+  <!-- TAB 1: Inspection Entry -->
+  <div id="inspectionTab" class="tab-content active">
+    <form id="qcForm">
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Work Order (W/O #)</label>
+          <input type="text" id="woNumber" placeholder="Scan or type WO # (e.g. WO-90412)" required oninput="generateBarcode()">
+          <div class="barcode-container">
+            <svg id="barcodeSVG"></svg>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Operation Type</label>
+          <select id="opType" onchange="handleOperationChange()" required>
+            <option value="">-- SELECT OPERATION FIRST --</option>
+            <option value="WIRING">WIRING</option>
+            <option value="MOUNTING">MOUNTING</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Technician (Filtered by Operation)</label>
+          <select id="techSelect" required disabled>
+            <option value="">-- SELECT OPERATION FIRST --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Lead Inspector</label>
+          <select id="leadSelect" required>
+            <option value="">-- SELECT LEAD --</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="inspectionDate" required>
+      </div>
+
+      <!-- Checklist Items Area -->
+      <div id="checklistWrapper" class="checklist-container" style="display:none;">
+        <div class="checklist-header" id="checklistTitle">CHECKPOINT VERIFICATION</div>
+        <div id="checkpointItems"></div>
+      </div>
+
+      <!-- Single Page Printable Signatures -->
+      <div class="print-signatures">
+        <div class="signature-box">
+          <p id="printTechSig">TECHNICIAN SIGNATURE & EMP ID</p>
+          <p>DATE: ____________________</p>
+        </div>
+        <div class="signature-box">
+          <p id="printLeadSig">LEAD INSPECTOR SIGNATURE</p>
+          <p>DATE: ____________________</p>
+        </div>
+      </div>
+
+      <!-- Action Controls -->
+      <div class="btn-group no-print">
+        <button type="submit" class="btn btn-primary">Save Work Log</button>
+        <button type="button" class="btn btn-secondary" onclick="window.print()">Print Single-Page Sheet</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- TAB 2: Performance Analytics -->
+  <div id="analyticsTab" class="tab-content">
+    <div class="analytics-grid">
+      <div class="metric-card">
+        <div class="metric-value" id="mTotal">0</div>
+        <div class="metric-label">Total Completed Logs</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="mWiring">0</div>
+        <div class="metric-label">Wiring Assemblies</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="mMounting">0</div>
+        <div class="metric-label">Mounting Assemblies</div>
+      </div>
+    </div>
+
+    <div class="bar-chart">
+      <h3 style="margin-top: 0; color: var(--accent-blue); font-size: 15px;">TOTAL OUTPUT BY ALL EMPLOYEES</h3>
+      <div id="allTechBarContainer"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: History Log -->
+  <div id="historyTab" class="tab-content">
+    <div class="form-group no-print">
+      <input type="text" id="searchInput" placeholder="Filter by W/O # or Employee Name..." onkeyup="filterHistory()">
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>W/O #</th>
+          <th>Operation</th>
+          <th>Technician</th>
+          <th>Lead</th>
+          <th>Date</th>
+          <th>Cycle Time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="historyTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // Personalclasificado
+  const leadRoster = [
+    { id: "824",  name: "Montes, Edwin" },
+    { id: "0134", name: "Pajic, Ljubica" }
+  ];
+
+  const wiringTechs = [
+    { id: "227",  name: "Aguilera, Vanessa C." },
+    { id: "233",  name: "Figuerres, Consolacion" },
+    { id: "252",  name: "Ojeda, Ania" },
+    { id: "721",  name: "Canta, David" },
+    { id: "729",  name: "Abreu, Yerellya" },
+    { id: "820",  name: "Rojas, Tania" },
+    { id: "965",  name: "Diaz, William" },
+    { id: "844",  name: "Barrios, Zenaida" },
+    { id: "1067", name: "Vega, Jonathan" }
+  ];
+
+  const mountingTechs = [
+    { id: "762",  name: "Lam, Raquel" },
+    { id: "773",  name: "Arocha B, David" },
+    { id: "779",  name: "Castejon, Marcos" },
+    { id: "991",  name: "Gomez, Neudys" }
+  ];
+
+  // Puntos de control
+  const wiringCheckpoints = [
+    "TRANSFORMER 1 CONNECTIONS (T1)",
+    "TRANSFORMER 3 CONNECTIONS (T3)",
+    "POWER DISTRIBUTION BLOCK (PDB)",
+    "TERMINAL BLOCK 4 TB4 (K3 and K4)",
+    "JUMPERS ON TERMINAL BLOCKS",
+    "EQ2 AND BELDEN WIRES + -",
+    "POWER SUPPLY",
+    "ALC POWER",
+    "POWER MONITOR (PM)",
+    "VFDs",
+    "MSPs CONNECTIONS",
+    "CONTACTORS (AUXILIARY AND COIL)"
+  ];
+
+  const mountingCheckpoints = [
+    "LABELS AND PRINT MARKERS",
+    "MSPs ACCORDING TO WO/PICK",
+    "CONTACTORS ACCORDING TO WO/PICK",
+    "TERMINAL BLOCKS RIGHT SIZE",
+    "VOLTAGE 575/460 OR 208V",
+    "RELAYS WITH SPRINGS",
+    "CURRENT SENSOR / BLUE CABLE IN PLASTIC BAG",
+    "FUSES ACCORDING TO WO/PICK",
+    "DRAWING WITH RIGHT VFDs",
+    "PARTS WELL ATTACHED (NOT CROOKED)",
+    "ENDCLIPS WELL ATTACHED",
+    "LAYOUT PROVIDED BY SUPERVISOR",
+    "PANEL RIGHT ORIENTATION",
+    "MISSING PARTS REPORTED"
+  ];
+
+  let secondsElapsed = 0;
+  let timerInterval = null;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('inspectionDate').valueAsDate = new Date();
+    populateLeads();
+    startTimer();
+    loadHistory();
+  });
+
+  function startTimer() {
+    secondsElapsed = 0;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      secondsElapsed++;
+      const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+      const secs = String(secondsElapsed % 60).padStart(2, '0');
+      document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
+    }, 1000);
+  }
+
+  function populateLeads() {
+    const leadSelect = document.getElementById('leadSelect');
+    leadSelect.innerHTML = '<option value="">-- SELECT LEAD --</option>';
+    leadRoster.forEach(l => {
+      leadSelect.add(new Option(`${l.name} [ID: ${l.id}]`, `${l.name} (ID: ${l.id})`));
+    });
+  }
+
+  function generateBarcode() {
+    const woVal = document.getElementById('woNumber').value.trim();
+    if(woVal.length > 0) {
+      JsBarcode("#barcodeSVG", woVal, {
+        format: "CODE128",
+        lineColor: "#000",
+        width: 1.8,
+        height: 35,
+        displayValue: true
+      });
+    } else {
+      document.getElementById('barcodeSVG').innerHTML = '';
+    }
+  }
+
+  function handleOperationChange() {
+    const op = document.getElementById('opType').value;
+    const techSelect = document.getElementById('techSelect');
+
+    techSelect.innerHTML = '';
+
+    if (!op) {
+      techSelect.disabled = true;
+      techSelect.add(new Option('-- SELECT OPERATION FIRST --', ''));
+      document.getElementById('checklistWrapper').style.display = 'none';
+      return;
+    }
+
+    techSelect.disabled = false;
+    techSelect.add(new Option(`-- SELECT ${op} TECHNICIAN --`, ''));
+
+    const roster = op === 'WIRING' ? wiringTechs : mountingTechs;
+    roster.forEach(t => {
+      techSelect.add(new Option(`${t.name} [ID: ${t.id}]`, `${t.name} (ID: ${t.id})`));
+    });
+
+    renderChecklist(op);
+  }
+
+  function renderChecklist(opType) {
+    const wrapper = document.getElementById('checklistWrapper');
+    const container = document.getElementById('checkpointItems');
+    const title = document.getElementById('checklistTitle');
+
+    wrapper.style.display = 'block';
+    title.innerText = `${opType} ELECTRICAL BENCH CHECKPOINTS SHEET`;
+    container.innerHTML = '';
+
+    const items = opType === 'WIRING' ? wiringCheckpoints : mountingCheckpoints;
+
+    items.forEach((item, idx) => {
+      const row = document.createElement('div');
+      row.className = 'checkpoint-row';
+      row.innerHTML = `
+        <span><strong>${idx + 1}.</strong> ${item}</span>
+        <div class="radio-group">
+          <label><input type="radio" name="chk_${idx}" value="YES" checked> YES</label>
+          <label><input type="radio" name="chk_${idx}" value="N/A"> N/A</label>
+        </div>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+
+    if(tabId === 'analyticsTab') updateAnalytics();
+  }
+
+  document.getElementById('qcForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const tech = document.getElementById('techSelect').value;
+    const lead = document.getElementById('leadSelect').value;
+    const wo = document.getElementById('woNumber').value;
+    const op = document.getElementById('opType').value;
+    const date = document.getElementById('inspectionDate').value;
+    const cycleTime = document.getElementById('timerDisplay').innerText;
+
+    const record = { id: Date.now(), wo, op, tech, lead, date, cycleTime };
+
+    let logs = JSON.parse(localStorage.getItem('addison_subassy_logs') || '[]');
+    logs.push(record);
+    localStorage.setItem('addison_subassy_logs', JSON.stringify(logs));
+
+    document.getElementById('printTechSig').innerText = `TECHNICIAN: ${tech}`;
+    document.getElementById('printLeadSig').innerText = `LEAD INSPECTOR: ${lead}`;
+
+    alert(`Work Log Saved Successfully!\nCycle Time Recorded: ${cycleTime}`);
+    startTimer();
+    loadHistory();
+  });
+
+  function loadHistory() {
+    let logs = JSON.parse(localStorage.getItem('addison_subassy_logs') || '[]');
+    const tbody = document.getElementById('historyTableBody');
+    tbody.innerHTML = '';
+
+    logs.forEach(r => {
+      const row = document.createElement('tr');
+      const badgeClass = r.op === 'WIRING' ? 'badge-wiring' : 'badge-mounting';
+
+      row.innerHTML = `
+        <td><strong>${r.wo}</strong></td>
+        <td><span class="badge ${badgeClass}">${r.op}</span></td>
+        <td>${r.tech}</td>
+        <td>${r.lead}</td>
+        <td>${r.date}</td>
+        <td>${r.cycleTime || 'N/A'}</td>
+        <td>
+          <button style="background:var(--accent-blue); color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="window.print()">Print</button>
+          <button style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="deleteLog(${r.id})">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function filterHistory() {
+    const filter = document.getElementById('searchInput').value.toUpperCase();
+    const rows = document.querySelectorAll('#historyTableBody tr');
+    rows.forEach(row => {
+      const text = row.innerText.toUpperCase();
+      row.style.display = text.includes(filter) ? '' : 'none';
+    });
+  }
+
+  function deleteLog(id) {
+    if(confirm('Are you sure you want to delete this log?')) {
+      let logs = JSON.parse(localStorage.getItem('addison_subassy_logs') || '[]');
+      logs = logs.filter(l => l.id !== id);
+      localStorage.setItem('addison_subassy_logs', JSON.stringify(logs));
+      loadHistory();
+    }
+  }
+
+  function updateAnalytics() {
+    let logs = JSON.parse(localStorage.getItem('addison_subassy_logs') || '[]');
+    document.getElementById('mTotal').innerText = logs.length;
+    document.getElementById('mWiring').innerText = logs.filter(l => l.op === 'WIRING').length;
+    document.getElementById('mMounting').innerText = logs.filter(l => l.op === 'MOUNTING').length;
+
+    const allEmployees = [...leadRoster, ...wiringTechs, ...mountingTechs];
+    const counts = {};
+
+    allEmployees.forEach(e => {
+      counts[`${e.name} (ID: ${e.id})`] = 0;
+    });
+
+    logs.forEach(l => {
+      if(l.tech) counts[l.tech] = (counts[l.tech] || 0) + 1;
+      if(l.lead) counts[l.lead] = (counts[l.lead] || 0) + 1;
+    });
+
+    const container = document.getElementById('allTechBarContainer');
+    container.innerHTML = '';
+
+    const maxCount = Math.max(...Object.values(counts), 1);
+
+    Object.keys(counts).forEach(emp => {
+      const count = counts[emp];
+      const percentage = (count / maxCount) * 100;
+
+      const bar = document.createElement('div');
+      bar.className = 'bar-item';
+      bar.innerHTML = `
+        <div style="display:flex; justify-content:space-between; font-size:12px; color: var(--text-main); font-weight:600;">
+          <span>${emp}</span>
+          <span><strong>${count}</strong> Panels Processed</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: ${percentage}%;"></div>
+        </div>
+      `;
+      container.appendChild(bar);
+    });
+  }
+</script>
+
+</body>
+</html>
